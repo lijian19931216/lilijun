@@ -1,8 +1,13 @@
-package com.example.demo.controller;
+package com.example.demo.utils;
+
+import com.example.demo.entiy.Message;
+import com.example.demo.entiy.TestMessage;
+import com.thoughtworks.xstream.XStream;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @description:
@@ -50,5 +55,25 @@ public class WeChatUtils {
         return "";
 
 
+    }
+
+    public static String getResponse(Map<String, Object> map) {
+        String MsgType= (String) map.get("MsgType");
+        Message message = null ;
+        switch (MsgType){
+            case "text" : message = new TestMessage(map,"你要跟啥") ; break;
+            case "image" : break;
+            case "voice" : break;
+            case "video" : break;
+            case "shortvideo" : break;
+            case "location" : break;
+        }
+        return messageToString(message);
+    }
+
+    private static String messageToString(Message message) {
+        XStream xStream = new XStream();
+        xStream.processAnnotations(TestMessage.class);
+        return xStream.toXML(message);
     }
 }

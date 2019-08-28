@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.utils.WeChatUtils;
+import com.example.demo.utils.XmlUtils;
 import org.dom4j.DocumentHelper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @description:
@@ -37,11 +40,21 @@ public class TestController {
                 builder.append(msg);
             }
             System.out.println(builder.toString());
-            System.out.println(XmlUtils.Dom2Map(DocumentHelper.parseText(builder.toString())));
+            Map<String, Object> map = XmlUtils.Dom2Map(DocumentHelper.parseText(builder.toString()));
+            System.out.println(map);
+            return WeChatUtils.getResponse(map);
+
+       /* String xml="<xml><ToUserName><![CDATA["+map.get("FromUserName")+"]]></ToUserName>\n" +
+                "<FromUserName><![CDATA["+map.get("ToUserName")+"]]></FromUserName>\n" +
+                "<CreateTime>"+System.currentTimeMillis()/1000+"</CreateTime>\n" +
+                "<MsgType><![CDATA[text]]></MsgType>\n" +
+                "<Content><![CDATA[this is a test]]></Content>\n" +
+                "<MsgId>1234567890123456</MsgId>" +
+                "</xml>" ;
+        return  xml;*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         if(WeChatUtils.checParam(timestamp,nonce,signature)){
 
