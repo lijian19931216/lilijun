@@ -1,9 +1,11 @@
 package com.example.demo.entiy;
 
-import com.thoughtworks.xstream.XStream;
+import com.alibaba.fastjson.JSON;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,13 +44,34 @@ public class TestMessage extends Message {
     }
 
     public static void main(String[] args) {
-        Map map = new HashMap();
+      /*  Map map = new HashMap();
         map.put("FromUserName", "FromUserName");
         map.put("ToUserName", "ToUserName");
         map.put("MsgType", "MsgType");
         TestMessage testMessage = new TestMessage(map, "hihao");
         XStream xStream = new XStream();
         xStream.processAnnotations(TestMessage.class);
-        System.out.println(xStream.toXML(testMessage));
+        System.out.println(xStream.toXML(testMessage));*/
+      ButtonBean buttonBean= new ButtonBean();
+      buttonBean.setKey("V1001_TODAY_MUSIC");
+      buttonBean.setName("菜单1");
+      buttonBean.setType("click");
+      SubButtonBean subButtonBean= new SubButtonBean();
+//      subButtonBean.setAppid("appid");
+//      subButtonBean.setKey("subkey");
+      subButtonBean.setName("子菜单1");
+      subButtonBean.setType("view");
+      subButtonBean.setUrl("http://www.soso.com/");
+        List<SubButtonBean> list= new ArrayList<>();
+        list.add(subButtonBean);
+        buttonBean.setSubButton(list);
+
+        List<ButtonBean> buttonBeans = new ArrayList<>();
+        buttonBeans.add(buttonBean);
+        Map map = new HashMap();
+        map.put("button", buttonBeans);
+
+        String jsonObject = JSON.toJSONString(map);
+        System.out.println(jsonObject);
     }
 }

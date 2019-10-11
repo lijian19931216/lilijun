@@ -42,6 +42,7 @@ public class TestController {
             System.out.println(builder.toString());
             Map<String, Object> map = XmlUtils.Dom2Map(DocumentHelper.parseText(builder.toString()));
             System.out.println(map);
+            System.out.println(WeChatUtils.getResponse(map));
             return WeChatUtils.getResponse(map);
 
        /* String xml="<xml><ToUserName><![CDATA["+map.get("FromUserName")+"]]></ToUserName>\n" +

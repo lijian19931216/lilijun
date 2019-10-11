@@ -1,6 +1,7 @@
 package com.example.demo.utils;
 
 import com.example.demo.entiy.Message;
+import com.example.demo.entiy.PictureTextMessage;
 import com.example.demo.entiy.TestMessage;
 import com.thoughtworks.xstream.XStream;
 
@@ -63,7 +64,7 @@ public class WeChatUtils {
         switch (MsgType){
             case "text" : message = new TestMessage(map,"你要跟啥") ; break;
             case "image" : break;
-            case "voice" : break;
+            case "voice" : message = new PictureTextMessage(map) ;break;
             case "video" : break;
             case "shortvideo" : break;
             case "location" : break;
@@ -73,7 +74,9 @@ public class WeChatUtils {
 
     private static String messageToString(Message message) {
         XStream xStream = new XStream();
-        xStream.processAnnotations(TestMessage.class);
+//        xStream.processAnnotations(TestMessage.class);
+        xStream.processAnnotations(PictureTextMessage.class);
         return xStream.toXML(message);
     }
+
 }
