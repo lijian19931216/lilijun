@@ -6,7 +6,6 @@ package com.example.demo.utils;
  * @create: 2019-08-28
  **/
 
-import com.example.demo.entiy.ButtonBean;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -16,7 +15,6 @@ import java.util.*;
  * Created by Arya on 2017/11/3.
  */
 public class XmlUtils {
-    private List<ButtonBean> button;
 
     public static Map<String, Object> Dom2Map(Document doc) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -80,4 +78,6 @@ public class XmlUtils {
             map.put(e.getName(), e.getText());
         return map;
     }
+
+
 }

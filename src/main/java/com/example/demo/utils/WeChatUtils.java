@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.entiy.AccessToken;
 import com.example.demo.entiy.Message;
 import com.example.demo.entiy.PictureTextMessage;
 import com.example.demo.entiy.TestMessage;
@@ -16,8 +18,10 @@ import java.util.Map;
  * @create: 2019-08-28
  **/
 public class WeChatUtils {
-    public static String token = "lijian" ;
 
+    public static String token = "lijian" ;
+    public static String appId = "wx35f57221ae1b48c7" ;
+    public static String secret = "247dc698b23915209a843d338cdf90de" ;
 
 
     public static boolean checParam(String timestamp, String nonce, String signature) {
@@ -68,15 +72,63 @@ public class WeChatUtils {
             case "video" : break;
             case "shortvideo" : break;
             case "location" : break;
+            case "event" : message=dealEvent(map);break;
         }
         return messageToString(message);
     }
 
+    private static Message dealEvent(Map<String, Object> map) {
+        String event = map.get("Event").toString();
+        switch (event) {
+            case "CLICK":return dealClick(map);
+            default:break;
+        }
+        return null;
+
+    }
+
+    private static Message dealClick(Map<String, Object> map) {
+        if ("key".equals(map.get("EventKey"))) {
+            return new TestMessage(map,"0000000");
+        }
+        return  null;
+    }
+
     private static String messageToString(Message message) {
         XStream xStream = new XStream();
-//        xStream.processAnnotations(TestMessage.class);
-        xStream.processAnnotations(PictureTextMessage.class);
+        xStream.processAnnotations(TestMessage.class);
+//        xStream.processAnnotations(PictureTextMessage.class);
         return xStream.toXML(message);
+    }
+    //获取token
+    private static String getAccessTokenByInt()  {
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&" +
+                "appid="+appId+"&secret="+secret;
+        try {
+            return HttpClientHelper.sendGet(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    private static AccessToken accessToken1;
+    private static void getAccessToken()  {
+        JSONObject jsonObject = JSONObject.parseObject(getAccessTokenByInt());
+        String accessToken = jsonObject.getString("access_token");
+        String expiresIn = jsonObject.getString("expires_in");
+        accessToken1 = new AccessToken(accessToken, expiresIn);
+
+    }
+    //
+    public static String getToken(){
+        if (accessToken1==null||accessToken1.isExpired()){
+          getAccessToken();
+        }
+        return accessToken1.getAccessToken();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getToken());
     }
 
 }
